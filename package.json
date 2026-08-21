@@ -1,0 +1,23 @@
+{
+  "name": "capturehub",
+  "version": "2.4.1",
+  "private": true,
+  "description": "CaptureHub · 六平台直播自动录制与上传系统",
+  "scripts": {
+    "dev": "concurrently -n server,client -c green,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w server && npm run build -w client",
+    "start": "npm run start -w server"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
