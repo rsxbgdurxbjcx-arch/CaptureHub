@@ -1,0 +1,43 @@
+services:
+  capturehub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: capturehub:latest
+    container_name: capturehub
+    restart: unless-stopped
+    ports:
+      # 默认绑定所有接口；公网部署请加反代 + 防火墙
+      - "3780:3780"
+    environment:
+      PORT: 3780
+      HOST: 0.0.0.0
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-Asia/Shanghai}
+      # 可选:允许跨域的来源(逗号分隔);默认不开启 CORS
+      CORS_ORIGIN: ${CORS_ORIGIN:-}
+      CAPTUREHUB_ROOT: /app
+      CAPTUREHUB_DATA_DIR: /data
+      CAPTUREHUB_RECORDINGS_DIR: /recordings
+      CAPTUREHUB_LOGS_DIR: /logs
+      CAPTUREHUB_CLIENT_DIST: /app/client/dist
+      FFMPEG_PATH: /usr/bin/ffmpeg
+      RCLONE_PATH: /usr/bin/rclone
+      TELEGRAM_BOT_API_PATH: /usr/local/bin/telegram-bot-api
+      RCLONE_CONFIG: /config/rclone/rclone.conf
+    volumes:
+      - ./data:/data
+      - ./recordings:/recordings
+      - ./logs:/logs
+      - ./config/rclone:/config/rclone
+      # 挂载宿主机 rclone 二进制（宿主机需安装 rclone）
+      - /usr/bin/rclone:/usr/bin/rclone:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3780/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    security_opt:
+      - no-new-privileges=true
