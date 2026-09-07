@@ -1,0 +1,16 @@
+node_modules/
+dist/
+server/dist/
+client/dist/
+data/
+recordings/
+logs/
+*.db
+*.db-journal
+.env
+.env.local
+.DS_Store
+rclone.conf
+*.log
+.vite/
+coverage/
